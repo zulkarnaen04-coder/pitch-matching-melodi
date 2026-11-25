@@ -100,7 +100,6 @@
       color: #8a81a8;
       font-weight: bold;
     }
-    /* Nada yang sedang aktif dinyanyikan / dibunyikan */
     .note-chip.active {
       border-color: #00f0ff;
       background: #1e1b4b;
@@ -110,7 +109,6 @@
     .note-chip.active .n-name { color: #ffffff; }
     .note-chip.active .n-beat { color: #ffe600; }
 
-    /* Nada yang sudah berhasil dilewati */
     .note-chip.done {
       border-color: #10b981;
       background: rgba(16, 185, 129, 0.25);
@@ -276,10 +274,7 @@
 
     <div class="target-card">
       <div class="target-title" id="melody-desc">SOAL 1: NADA PANJANG (4 KETUK)</div>
-      
-      <!-- DERETAN NADA & KETUKAN -->
       <div class="melody-sequence" id="melody-sequence"></div>
-
       <div class="target-freq" id="target-freq">Target Aktif: C4 (261.6 Hz) • 4 Ketuk</div>
       <button class="play-sound-btn" onclick="playMelodySequence()">🔊 DENGARKAN MELODI BIOLA</button>
     </div>
@@ -320,7 +315,6 @@
   <script>
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwLlFjDUN03qJ4oRzW4RXMetplgcasO4AW-6HZv6OduRg8IRqiDYihlj37hYBK-HZJm/exec";
 
-    // KAMUS FREKUENSI NADA
     const NOTE_FREQS = {
       "G3": 196.00,
       "A3": 220.00,
@@ -332,7 +326,6 @@
       "G4": 392.00
     };
 
-    // 10 SOAL MELODI & KETUKAN (1 Ketuk = 0.8 detik / Tempo 75 BPM)
     const MELODY_QUESTIONS = [
       {
         title: "SOAL 1: NADA STABIL (4 KETUK)",
@@ -434,11 +427,11 @@
     ];
 
     const TOTAL_QUESTIONS = MELODY_QUESTIONS.length;
-    const SECONDS_PER_BEAT = 0.8; // 1 ketuk = 0.8 detik
-    const TIME_LIMIT_PER_Q = 20.0; // Maksimal 20 detik per rangkaian melodi
+    const SECONDS_PER_BEAT = 0.8;
+    const TIME_LIMIT_PER_Q = 20.0;
 
     let currentQIndex = 0;
-    let currentNoteStep = 0; // Indeks nada yang sedang dinyanyikan dalam 1 soal
+    let currentNoteStep = 0;
     let score = 0, currentRank = "UNRANKED";
     let questionAccuracies = [];
     let holdCentsSamples = [];
@@ -527,11 +520,25 @@
         if (questionTimeLeft <= 0) {
           questionTimeLeft = 0;
           document.getElementById("timer-display").innerText = "⏱️ Waktu Habis!";
-          // Hitung poin parsial jika sudah menyelesaikan sebagian nada di soal ini
           var qData = MELODY_QUESTIONS[currentQIndex];
           var ratio = currentNoteStep / qData.notes.length;
           var partialPoints = Math.round(ratio * 8);
           var partialAcc = Math.round(ratio * 80);
           completeCurrentQuestion(partialPoints, partialAcc);
         } else {
-          document.getElementById(
+          document.getElementById("timer-display").innerText = "⏱️ Waktu: " + questionTimeLeft.toFixed(1) + "s";
+        }
+      }, 100);
+    }
+
+    function skipQuestion() {
+      if (isExamFinished) return;
+      completeCurrentQuestion(0, 0);
+    }
+
+    function completeCurrentQuestion(earnedPoints, earnedAccuracy) {
+      clearInterval(timerInterval);
+      score += earnedPoints;
+      questionAccuracies.push(earnedAccuracy);
+      currentQIndex++;
+      updateRankAndScor
