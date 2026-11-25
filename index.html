@@ -1,299 +1,290 @@
+```html
 <!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>PA ZU - MLBB MELODY PITCH MATCH</title>
+  <title>PA ZU - MLBB MELODY & BEAT MATCH</title>
+  <!-- Memuat Tailwind CSS sesuai standar layout adaptif -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; user-select: none; }
-    
-    body { 
-      background: #0b0914; 
-      color: #ffffff; 
-      height: 100vh; 
-      height: 100dvh; 
-      display: flex; 
-      flex-direction: column; 
-      overflow: hidden; 
-      position: relative;
+    /* Gaya Kustom Tema Cyber-Gaming MLBB & Animasi Permainan */
+    * {
+      box-sizing: border-box;
+      font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
     }
 
-    .top-header { 
-      background: #161224; 
-      height: 50px; 
-      border-bottom: 3px solid #ff007f; 
-      display: flex; 
-      justify-content: space-between; 
-      align-items: center; 
-      padding: 0 12px; 
-      box-shadow: 0 0 15px rgba(255, 0, 127, 0.4); 
-      flex-shrink: 0; 
-      z-index: 10;
-    }
-    .student-badge { font-size: 13px; color: #00f0ff; font-weight: bold; }
-    .status-group { display: flex; align-items: center; gap: 8px; }
-    .rank-badge { background: linear-gradient(135deg, #7928ca, #ff007f); padding: 4px 10px; border-radius: 10px; font-size: 11px; font-weight: 900; color: #ffe600; border: 1px solid #ffe600; }
-    .score-badge { font-size: 15px; font-weight: 900; color: #ffe600; }
-
-    .start-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle, #282142 0%, #0b0914 100%); z-index: 9998; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 15px; text-align: center; overflow-y: auto; }
-    .start-title { color: #00f0ff; font-size: 26px; font-weight: 900; margin-bottom: 4px; text-transform: uppercase; text-shadow: 0 0 15px #00f0ff; }
-    .start-subtitle { color: #ff007f; font-size: 13px; font-weight: 800; margin-bottom: 14px; text-transform: uppercase; }
-    
-    .student-form { background: #161224; border: 3px solid #ff007f; padding: 16px; border-radius: 18px; width: 100%; max-width: 350px; margin-bottom: 14px; text-align: left; }
-    .form-group { margin-bottom: 10px; }
-    .form-group label { display: block; font-size: 13px; color: #ffe600; font-weight: bold; margin-bottom: 4px; }
-    .form-group input { width: 100%; padding: 11px; font-size: 15px; border-radius: 10px; border: 2px solid #7928ca; background: #0b0914; color: #fff; outline: none; user-select: text; }
-    
-    .start-btn { background: linear-gradient(135deg, #00f0ff, #7928ca); color: #fff; font-size: 18px; font-weight: 900; padding: 14px 30px; border: 2px solid #fff; border-radius: 30px; cursor: pointer; width: 100%; max-width: 350px; text-transform: uppercase; }
-
-    .arena { 
-      flex: 1; 
-      display: flex; 
-      flex-direction: column; 
-      justify-content: flex-start; 
-      align-items: center; 
-      padding: 10px 15px 90px 15px; 
-      gap: 10px; 
-      overflow-y: auto; 
+    body {
+      background-color: #0b0914;
+      color: #ffffff;
+      height: 100vh;
+      height: 100dvh;
+      overflow: hidden;
     }
 
-    .info-bar {
-      width: 100%;
-      max-width: 350px;
-      display: flex;
-      justify-content: space-between;
-      font-size: 12px;
-      font-weight: bold;
+    /* Efek Neon & Glow */
+    .neon-pink-border {
+      border-color: #ff007f;
+      box-shadow: 0 0 18px rgba(255, 0, 127, 0.35);
     }
-    
-    .target-card { background: #161224; border: 2px solid #00f0ff; padding: 12px; border-radius: 16px; text-align: center; width: 100%; max-width: 350px; }
-    .target-title { font-size: 11px; color: #ffe600; font-weight: bold; margin-bottom: 8px; }
 
-    .melody-sequence {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 6px;
-      margin-bottom: 8px;
+    .neon-cyan-border {
+      border-color: #00f0ff;
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.25);
     }
+
+    .neon-text-cyan {
+      color: #00f0ff;
+      text-shadow: 0 0 14px rgba(0, 240, 255, 0.8);
+    }
+
+    /* Chip Nada Melodi */
     .note-chip {
       background: #0b0914;
       border: 2px solid #332a54;
-      border-radius: 10px;
-      padding: 6px 8px;
-      min-width: 44px;
+      border-radius: 12px;
+      padding: 6px 10px;
+      min-width: 48px;
       text-align: center;
+      transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    .note-chip .n-name { font-size: 15px; font-weight: 900; color: #cbd5e1; display: block; }
-    .note-chip .n-beat { font-size: 10px; color: #8a81a8; font-weight: bold; }
-    .note-chip.active { border-color: #00f0ff; background: #1e1b4b; transform: scale(1.08); }
-    .note-chip.active .n-name { color: #ffffff; }
-    .note-chip.active .n-beat { color: #ffe600; }
-    .note-chip.done { border-color: #10b981; background: rgba(16, 185, 129, 0.25); }
-    .note-chip.done .n-name { color: #10b981; }
-    .note-chip.done .n-beat { color: #a7f3d0; }
 
-    .target-freq { font-size: 12px; color: #00f0ff; font-weight: 600; }
-    .play-sound-btn { margin-top: 8px; background: #282142; border: 2px solid #ff007f; color: #fff; padding: 8px 16px; border-radius: 18px; font-size: 13px; font-weight: bold; cursor: pointer; }
-
-    .pitch-container { width: 100%; max-width: 350px; background: #161224; border: 2px solid #7928ca; border-radius: 14px; padding: 12px; text-align: center; }
-    .meter-bar { position: relative; width: 100%; height: 24px; background: #0b0914; border-radius: 12px; overflow: hidden; border: 1px solid #332a54; margin: 8px 0; }
-    .center-target-zone { position: absolute; left: 30%; width: 40%; height: 100%; background: rgba(16, 185, 129, 0.35); border-left: 2px dashed #10b981; border-right: 2px dashed #10b981; }
-    .pitch-pointer { position: absolute; left: 50%; top: 0; width: 8px; height: 100%; background: #ff007f; border-radius: 4px; transform: translateX(-50%); transition: left 0.08s ease-out; }
-
-    .pitch-status { font-size: 14px; font-weight: 900; color: #ffe600; height: 20px; }
-    .detected-freq { font-size: 12px; color: #00f0ff; margin-top: 2px; }
-
-    .progress-box { width: 100%; max-width: 350px; background: #161224; padding: 10px 14px; border-radius: 12px; border: 1px solid #7928ca; text-align: center; }
-    .progress-title { font-size: 12px; color: #ffe600; margin-bottom: 6px; font-weight: 900; }
-    .progress-bg { width: 100%; height: 12px; background: #0b0914; border-radius: 6px; overflow: hidden; }
-    .progress-fill { width: 0%; height: 100%; background: linear-gradient(90deg, #10b981, #00f0ff); }
-
-    .controls { 
-      position: fixed;
-      bottom: 0; left: 0; width: 100%;
-      padding: 10px 15px 15px 15px; 
-      background: #161224; 
-      border-top: 2px solid #7928ca; 
-      display: flex; 
-      justify-content: center; 
-      gap: 8px;
-      z-index: 100;
+    .note-chip.active {
+      border-color: #00f0ff;
+      background: #1e1b4b;
+      transform: scale(1.08);
+      box-shadow: 0 0 12px rgba(0, 240, 255, 0.65);
     }
-    .mic-btn { 
-      flex: 2;
-      background: linear-gradient(135deg, #10b981, #059669); 
-      color: #fff; 
-      border: 2px solid #fff; 
-      font-size: 15px; 
-      font-weight: 900; 
-      padding: 12px 14px; 
-      border-radius: 25px; 
-      cursor: pointer; 
-      max-width: 220px; 
+
+    .note-chip.active .n-name {
+      color: #ffffff;
     }
-    .mic-btn.recording { background: linear-gradient(135deg, #ef4444, #dc2626) !important; }
-    .skip-btn {
-      flex: 1;
-      background: #282142;
+
+    .note-chip.active .n-beat {
       color: #ffe600;
-      border: 2px solid #ffe600;
-      font-size: 13px;
-      font-weight: 900;
-      padding: 12px 10px;
-      border-radius: 25px;
-      cursor: pointer;
-      max-width: 110px;
     }
 
-    .result-modal {
-      display: none;
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(11, 9, 20, 0.96);
-      z-index: 9999;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-      text-align: center;
+    .note-chip.done {
+      border-color: #10b981;
+      background: rgba(16, 185, 129, 0.22);
     }
-    .result-card {
-      background: #161224;
-      border: 3px solid #00f0ff;
-      border-radius: 20px;
-      padding: 22px;
-      width: 100%;
-      max-width: 350px;
+
+    .note-chip.done .n-name {
+      color: #10b981;
     }
-    .wa-btn {
-      display: block;
-      width: 100%;
-      background: #25D366;
-      color: #fff;
-      font-weight: 900;
-      padding: 14px;
-      border-radius: 25px;
-      text-decoration: none;
-      margin-top: 14px;
-      font-size: 15px;
-      border: 2px solid #fff;
+
+    .note-chip.done .n-beat {
+      color: #a7f3d0;
+    }
+
+    .note-chip.playing-preview {
+      border-color: #ff007f !important;
+      background: rgba(255, 0, 127, 0.25) !important;
+      transform: scale(1.12) !important;
+      box-shadow: 0 0 16px #ff007f !important;
+    }
+
+    /* Indikator Pitch Meter */
+    .pitch-pointer {
+      position: absolute;
+      left: 50%;
+      top: 0;
+      width: 8px;
+      height: 100%;
+      background: #ff007f;
+      border-radius: 4px;
+      transform: translateX(-50%);
+      transition: left 0.08s ease-out;
+      box-shadow: 0 0 10px #ff007f;
+    }
+
+    /* Tombol Rekam Berdenyut */
+    @keyframes pulseRed {
+      0%, 100% { box-shadow: 0 0 12px rgba(239, 68, 68, 0.6); }
+      50% { box-shadow: 0 0 24px rgba(239, 68, 68, 0.95); }
+    }
+
+    .mic-recording {
+      background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+      animation: pulseRed 1.2s infinite;
+    }
+
+    /* Custom Notification Banner (Pengganti alert()) */
+    .toast-banner {
+      transition: transform 0.25s ease, opacity 0.25s ease;
     }
   </style>
 </head>
-<body>
+<body class="flex flex-col relative select-none">
+
+  <!-- TOAST NOTIFICATION (PENGGANTI ALERT) -->
+  <div id="toast-box" class="toast-banner fixed top-4 left-1/2 -translate-x-1/2 z-[10000] hidden max-w-[92vw] w-[360px] bg-[#161224] border-2 border-[#ff007f] text-white px-4 py-3 rounded-2xl shadow-2xl text-center text-xs font-bold">
+    <span id="toast-msg">Pesan notifikasi</span>
+  </div>
 
   <!-- START SCREEN -->
-  <div class="start-screen" id="start-screen">
-    <div class="start-title">PA ZU</div>
-    <div class="start-subtitle">MLBB MELODY & BEAT MATCH</div>
-    
-    <div class="student-form">
-      <div class="form-group">
-        <label for="student-name">Nama Lengkap Murid:</label>
-        <input type="text" id="student-name" placeholder="Ketik nama lengkap..." autocomplete="off">
-      </div>
-      <div class="form-group">
-        <label for="student-class">Kelas:</label>
-        <input type="text" id="student-class" placeholder="Contoh: 7.1" autocomplete="off">
-      </div>
-      <div class="form-group">
-        <label for="student-email">Email Murid (Untuk Kirim Hasil):</label>
-        <input type="email" id="student-email" placeholder="contoh@gmail.com" autocomplete="off">
-      </div>
-      <div class="form-group" style="margin-bottom:0;">
-        <label for="student-wa">Nomor WhatsApp (Awali 08):</label>
-        <input type="tel" id="student-wa" placeholder="Contoh: 081234567890" autocomplete="off">
-      </div>
-    </div>
+  <div id="start-screen" class="fixed inset-0 z-[9998] flex flex-col justify-center items-center p-4 text-center overflow-y-auto" style="background: radial-gradient(circle, #282142 0%, #0b0914 100%);">
+    <div class="w-full max-w-[360px] my-auto py-2">
+      <h1 class="text-3xl font-black uppercase tracking-wider neon-text-cyan mb-1">PA ZU</h1>
+      <p class="text-xs font-extrabold uppercase tracking-widest text-[#ff007f] mb-4">🎼 MLBB MELODY & BEAT MATCH 🎼</p>
 
-    <div style="background:#161224; border:2px solid #7928ca; padding:10px; border-radius:12px; font-size:12px; margin-bottom:14px; width:100%; max-width:350px; text-align:left;">
-      <strong style="color:#ffe600;">CARA BERMAIN (10 MELODI):</strong>
-      <ul style="margin-left:16px; margin-top:4px; color:#e2e8f0; line-height:1.4;">
-        <li>Tekan tombol Dengarkan Melodi untuk mendengar nada.</li>
-        <li>Tekan <strong>MULAI NYANYI</strong> lalu tirukan nada secara berurutan.</li>
-        <li>Tahan tiap nada sesuai jumlah ketukannya!</li>
-      </ul>
+      <!-- Formulir Identitas Murid -->
+      <div class="bg-[#161224] border-[3px] neon-pink-border p-4 rounded-2xl w-full mb-3 text-left">
+        <div class="mb-2.5">
+          <label for="student-name" class="block text-xs font-bold text-[#ffe600] mb-1">Nama Lengkap Murid:</label>
+          <input type="text" id="student-name" placeholder="Ketik nama lengkap..." autocomplete="off"
+            class="w-full px-3 py-2.5 text-sm rounded-xl border-2 border-[#7928ca] bg-[#0b0914] text-white outline-none focus:border-[#00f0ff] select-text">
+        </div>
+        <div class="mb-2.5">
+          <label for="student-class" class="block text-xs font-bold text-[#ffe600] mb-1">Kelas:</label>
+          <input type="text" id="student-class" placeholder="Contoh: 7.1" autocomplete="off"
+            class="w-full px-3 py-2.5 text-sm rounded-xl border-2 border-[#7928ca] bg-[#0b0914] text-white outline-none focus:border-[#00f0ff] select-text">
+        </div>
+        <div class="mb-2.5">
+          <label for="student-email" class="block text-xs font-bold text-[#ffe600] mb-1">Email Murid (Untuk Kirim Hasil):</label>
+          <input type="email" id="student-email" placeholder="contoh@gmail.com" autocomplete="off"
+            class="w-full px-3 py-2.5 text-sm rounded-xl border-2 border-[#7928ca] bg-[#0b0914] text-white outline-none focus:border-[#00f0ff] select-text">
+        </div>
+        <div>
+          <label for="student-wa" class="block text-xs font-bold text-[#ffe600] mb-1">Nomor WhatsApp (Awali 08):</label>
+          <input type="tel" id="student-wa" placeholder="Contoh: 081234567890" autocomplete="off"
+            class="w-full px-3 py-2.5 text-sm rounded-xl border-2 border-[#7928ca] bg-[#0b0914] text-white outline-none focus:border-[#00f0ff] select-text">
+        </div>
+      </div>
+
+      <!-- Panduan Singkat -->
+      <div class="bg-[#161224] border-2 border-[#7928ca] p-3 rounded-xl text-xs mb-4 text-left">
+        <strong class="text-[#ffe600] block mb-1">CARA BERMAIN (10 MELODI):</strong>
+        <ul class="list-disc ml-4 text-slate-200 space-y-1 leading-snug">
+          <li>Tekan <span class="text-[#ff007f] font-bold">🔊 DENGARKAN MELODI</span> untuk mendengar nada & ketukannya.</li>
+          <li>Tekan <strong class="text-[#10b981]">MULAI NYANYI</strong> lalu tirukan nada secara berurutan dari kiri ke kanan.</li>
+          <li>Tahan tiap nada sesuai jumlah ketukannya (1 ketuk = 0.8 detik)!</li>
+        </ul>
+      </div>
+
+      <button id="btn-start" type="button"
+        class="w-full py-3.5 px-6 rounded-full font-black text-base uppercase tracking-wide text-white border-2 border-white cursor-pointer active:scale-95 transition-transform"
+        style="background: linear-gradient(135deg, #00f0ff, #7928ca); box-shadow: 0 0 18px rgba(0, 240, 255, 0.55);">
+        MULAI MAIN 🚀
+      </button>
     </div>
-    <button class="start-btn" onclick="validateAndStart()">MULAI MAIN</button>
   </div>
 
   <!-- TOP HEADER -->
-  <div class="top-header">
-    <div class="student-badge" id="display-student">Siswa: -</div>
-    <div class="status-group">
-      <div class="rank-badge" id="question-badge">SOAL: 1/10</div>
-      <div class="score-badge" id="score-badge">SKOR: 0</div>
+  <header class="bg-[#161224] h-[52px] border-b-[3px] border-[#ff007f] flex justify-between items-center px-3 shrink-0 z-10 shadow-lg">
+    <div id="display-student" class="text-xs sm:text-sm font-bold text-[#00f0ff] truncate max-w-[45%]">Siswa: -</div>
+    <div class="flex items-center gap-2">
+      <div id="question-badge" class="px-2.5 py-1 rounded-xl text-[11px] font-black text-[#ffe600] border border-[#ffe600]"
+        style="background: linear-gradient(135deg, #7928ca, #ff007f);">SOAL: 1/10</div>
+      <div id="score-badge" class="text-sm font-black text-[#ffe600]">SKOR: 0</div>
     </div>
-  </div>
+  </header>
 
-  <!-- ARENA NYANYI -->
-  <div class="arena">
-    <div class="info-bar">
-      <span style="color:#10b981;" id="acc-display">Akurasi: 0%</span>
-      <span style="color:#ff007f;" id="timer-display">Waktu: 20.0s</span>
-    </div>
-
-    <div class="target-card">
-      <div class="target-title" id="melody-desc">SOAL 1: NADA STABIL (4 KETUK)</div>
-      <div class="melody-sequence" id="melody-sequence"></div>
-      <div class="target-freq" id="target-freq">Target Aktif: C4 (261.6 Hz) - 4 ketuk</div>
-      <button class="play-sound-btn" onclick="playMelodySequence()">DENGARKAN MELODI BIOLA</button>
+  <!-- GAME ARENA -->
+  <main class="flex-1 flex flex-col justify-start items-center px-3.5 pt-3 pb-24 gap-2.5 overflow-y-auto">
+    <!-- Info Bar Akurasi & Timer -->
+    <div class="w-full max-w-[360px] flex justify-between items-center text-xs font-extrabold">
+      <span id="acc-display" class="text-[#10b981]">🎯 Akurasi: 0%</span>
+      <span id="timer-display" class="text-[#ff007f]">⏱️ Waktu: 20.0s</span>
     </div>
 
-    <div class="pitch-container">
-      <div class="pitch-status" id="pitch-status">TEKAN 'MULAI NYANYI'</div>
-      <div class="meter-bar">
-        <div class="center-target-zone"></div>
-        <div class="pitch-pointer" id="pitch-pointer"></div>
+    <!-- Target Card Melodi -->
+    <section class="w-full max-w-[360px] bg-[#161224] border-2 neon-cyan-border p-3 rounded-2xl text-center">
+      <div id="melody-desc" class="text-[11px] font-extrabold text-[#ffe600] tracking-wide uppercase mb-2">
+        SOAL 1: NADA STABIL (4 KETUK)
       </div>
-      <div class="detected-freq" id="detected-freq">Suara Murid: - Hz</div>
-    </div>
 
-    <div class="progress-box">
-      <div class="progress-title" id="hold-instruction">TAHAN NADA C4 (4 KETUK)</div>
-      <div class="progress-bg">
-        <div class="progress-fill" id="progress-fill"></div>
+      <!-- Deretan Chip Nada -->
+      <div id="melody-sequence" class="flex flex-wrap justify-center gap-1.5 mb-2.5"></div>
+
+      <div id="target-freq" class="text-xs font-bold text-[#00f0ff]">
+        Target Aktif: C4 (261.6 Hz) • 4 ketuk
       </div>
-    </div>
-  </div>
 
-  <!-- CONTROLS -->
-  <div class="controls">
-    <button class="mic-btn" id="mic-btn" onclick="toggleMic()">MULAI NYANYI</button>
-    <button class="skip-btn" onclick="skipQuestion()">LEWATI</button>
-  </div>
+      <button id="btn-play" type="button"
+        class="mt-2.5 bg-[#282142] hover:bg-[#342b56] border-2 border-[#ff007f] text-white px-4 py-2 rounded-full text-xs font-extrabold cursor-pointer active:scale-95 transition-transform">
+        🔊 DENGARKAN MELODI BIOLA
+      </button>
+    </section>
+
+    <!-- Pitch Meter -->
+    <section class="w-full max-w-[360px] bg-[#161224] border-2 border-[#7928ca] rounded-2xl p-3 text-center">
+      <div id="pitch-status" class="text-sm font-black text-[#ffe600] h-5 flex items-center justify-center">
+        TEKAN 'MULAI NYANYI'
+      </div>
+      <div class="relative w-full h-6 bg-[#0b0914] rounded-full overflow-hidden border border-[#332a54] my-2">
+        <div class="absolute left-[30%] w-[40%] h-full bg-[#10b981]/35 border-x-2 border-dashed border-[#10b981]"></div>
+        <div id="pitch-pointer" class="pitch-pointer"></div>
+      </div>
+      <div id="detected-freq" class="text-xs font-semibold text-[#00f0ff]">Suara Murid: - Hz</div>
+    </section>
+
+    <!-- Progress Hold Bar -->
+    <section class="w-full max-w-[360px] bg-[#161224] p-3 rounded-2xl border border-[#7928ca] text-center">
+      <div id="hold-instruction" class="text-xs font-black text-[#ffe600] mb-1.5 tracking-wide">
+        🎯 NYANYIKAN & TAHAN: C4 (4 ketuk)
+      </div>
+      <div class="w-full h-3 bg-[#0b0914] rounded-full overflow-hidden">
+        <div id="progress-fill" class="w-0 h-full rounded-full transition-[width] duration-75 linear"
+          style="background: linear-gradient(90deg, #10b981, #00f0ff);"></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FIXED BOTTOM CONTROLS -->
+  <footer class="fixed bottom-0 left-0 w-full px-3.5 pt-2.5 pb-3.5 bg-[#161224] border-t-2 border-[#7928ca] flex justify-center gap-2.5 z-50 shadow-[0_-6px_16px_rgba(0,0,0,0.65)]">
+    <button id="mic-btn" type="button"
+      class="flex-[2] max-w-[230px] text-white border-2 border-white text-sm font-black py-3 px-4 rounded-full cursor-pointer uppercase active:scale-95 transition-transform"
+      style="background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 0 12px rgba(16, 185, 129, 0.4);">
+      🎤 MULAI NYANYI
+    </button>
+    <button id="skip-btn" type="button"
+      class="flex-1 max-w-[115px] bg-[#282142] text-[#ffe600] border-2 border-[#ffe600] text-xs font-black py-3 px-2.5 rounded-full cursor-pointer uppercase active:scale-95 transition-transform">
+      ⏭️ LEWATI
+    </button>
+  </footer>
 
   <!-- MODAL HASIL AKHIR -->
-  <div class="result-modal" id="result-modal">
-    <div class="result-card">
-      <div style="color:#00f0ff; font-size:20px; font-weight:900; margin-bottom:8px;">PERMAINAN SELESAI!</div>
-      <div id="result-summary" style="color:#e2e8f0; font-size:14px; line-height:1.6; text-align:left; background:#0b0914; padding:12px; border-radius:12px; border:1px solid #7928ca;"></div>
-      <div id="email-notif" style="font-size:12px; color:#10b981; margin-top:10px; font-weight:bold;"></div>
-      <a id="wa-share-link" class="wa-btn" href="#" target="_blank">KIRIM HASIL KE WHATSAPP</a>
+  <div id="result-modal" class="hidden fixed inset-0 bg-[#0b0914]/95 z-[9999] flex-col justify-center items-center p-5 text-center">
+    <div class="bg-[#161224] border-[3px] border-[#00f0ff] rounded-3xl p-5 w-full max-w-[360px] shadow-2xl">
+      <h2 class="text-xl font-black text-[#00f0ff] mb-3">🏁 PERMAINAN SELESAI!</h2>
+      <div id="result-summary" class="text-slate-200 text-sm leading-relaxed text-left bg-[#0b0914] p-3.5 rounded-2xl border border-[#7928ca]"></div>
+      <div id="email-notif" class="text-xs text-[#10b981] mt-3 font-bold"></div>
+      <a id="wa-share-link" href="#" target="_blank" rel="noopener noreferrer"
+        class="block w-full bg-[#25D366] hover:bg-[#20bd5a] text-white font-black py-3.5 px-4 rounded-full mt-3.5 text-sm border-2 border-white shadow-lg">
+        📲 KIRIM HASIL KE WHATSAPP
+      </a>
+      <button type="button" onclick="location.reload()"
+        class="mt-2.5 w-full bg-[#282142] text-slate-300 font-bold py-2.5 px-4 rounded-full text-xs border border-[#7928ca]">
+        🔄 MAIN LAGI
+      </button>
     </div>
   </div>
 
   <script>
-    var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwLlFjDUN03qJ4oRzW4RXMetplgcasO4AW-6HZv6OduRg8IRqiDYihlj37hYBK-HZJm/exec";
+    // URL Google Apps Script untuk pencatatan Spreadsheet & Email otomatis
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwLlFjDUN03qJ4oRzW4RXMetplgcasO4AW-6HZv6OduRg8IRqiDYihlj37hYBK-HZJm/exec";
 
-    var NOTE_FREQS = {
-      "G3": 196.00,
-      "A3": 220.00,
-      "B3": 246.94,
-      "C4": 261.63,
-      "D4": 293.66,
-      "E4": 329.63,
-      "F4": 349.23,
-      "G4": 392.00
+    // Kamus Frekuensi Nada (Hz)
+    const NOTE_FREQS = {
+      G3: 196.00,
+      A3: 220.00,
+      B3: 246.94,
+      C4: 261.63,
+      D4: 293.66,
+      E4: 329.63,
+      F4: 349.23,
+      G4: 392.00
     };
 
-    var MELODY_QUESTIONS = [
+    // 10 Soal Melodi & Ketukan (1 ketuk = 0.8 detik)
+    const MELODY_QUESTIONS = [
       {
         title: "SOAL 1: NADA STABIL (4 KETUK)",
-        notes: [
-          { note: "C4", beats: 4 }
-        ]
+        notes: [{ note: "C4", beats: 4 }]
       },
       {
         title: "SOAL 2: TANGGA NADA NAIK (1 KETUK)",
@@ -388,123 +379,132 @@
       }
     ];
 
-    var TOTAL_QUESTIONS = 10;
-    var SECONDS_PER_BEAT = 0.8;
-    var TIME_LIMIT_PER_Q = 20.0;
+    const TOTAL_QUESTIONS = MELODY_QUESTIONS.length;
+    const SECONDS_PER_BEAT = 0.8;
+    const TIME_LIMIT_PER_Q = 20.0;
 
-    var currentQIndex = 0;
-    var currentNoteStep = 0;
-    var score = 0;
-    var currentRank = "UNRANKED";
-    var questionAccuracies = [];
-    var holdCentsSamples = [];
-    var isExamFinished = false;
+    // State Permainan
+    let currentQIndex = 0;
+    let currentNoteStep = 0;
+    let score = 0;
+    let questionAccuracies = [];
+    let holdCentsSamples = [];
+    let isExamFinished = false;
 
-    var studentName = "";
-    var studentClass = "";
-    var studentEmail = "";
-    var studentWA = "";
-    
-    var audioCtx = null;
-    var micStream = null;
-    var analyser = null;
-    var isListening = false;
-    var holdProgress = 0;
-    var lastTime = performance.now();
-    var questionTimeLeft = TIME_LIMIT_PER_Q;
-    var timerInterval = null;
-    var isPlayingPreview = false;
+    let studentName = "";
+    let studentClass = "";
+    let studentEmail = "";
+    let studentWA = "";
 
-    function formatBeatLabel(b) {
-      if (b === 0.5) return "1/2 ketuk";
-      return b + " ketuk";
+    let audioCtx = null;
+    let micStream = null;
+    let analyser = null;
+    let isListening = false;
+    let holdProgress = 0;
+    let lastTime = 0;
+    let questionTimeLeft = TIME_LIMIT_PER_Q;
+    let timerInterval = null;
+    let isPlayingPreview = false;
+    let previewRunId = 0;
+    let toastTimer = null;
+
+    // Menampilkan pesan notifikasi rapi tanpa alert()
+    function showToast(message) {
+      const box = document.getElementById("toast-box");
+      const msg = document.getElementById("toast-msg");
+      msg.innerText = message;
+      box.classList.remove("hidden");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        box.classList.add("hidden");
+      }, 3800);
+    }
+
+    function formatBeatLabel(beats) {
+      return beats === 0.5 ? "½ ketuk" : beats + " ketuk";
     }
 
     function calculateRank(sc) {
-      if (sc < 40) return "WARRIOR";
-      if (sc < 55) return "ELITE";
-      if (sc < 70) return "MASTER";
-      if (sc < 80) return "GRANDMASTER";
-      if (sc < 90) return "EPIC";
-      if (sc < 96) return "LEGEND";
-      return "MYTHIC";
+      if (sc < 40) return "WARRIOR ⚔️";
+      if (sc < 55) return "ELITE 🛡️";
+      if (sc < 70) return "MASTER ⚔️✨";
+      if (sc < 80) return "GRANDMASTER 👑";
+      if (sc < 90) return "EPIC 💎";
+      if (sc < 96) return "LEGEND 🦅";
+      return "MYTHIC 🌟🔥";
     }
 
     function getAverageAccuracy() {
       if (questionAccuracies.length === 0) return 0;
-      var sum = 0;
-      for (var i = 0; i < questionAccuracies.length; i++) {
-        sum += questionAccuracies[i];
-      }
+      const sum = questionAccuracies.reduce((acc, val) => acc + val, 0);
       return Math.round(sum / questionAccuracies.length);
     }
 
-    function updateRankAndScoreUI() {
-      currentRank = calculateRank(score);
-      var qNum = Math.min(currentQIndex + 1, TOTAL_QUESTIONS);
-      document.getElementById("question-badge").innerText = "SOAL: " + qNum + "/10";
-      document.getElementById("score-badge").innerText = "SKOR: " + score;
-      document.getElementById("acc-display").innerText = "Akurasi: " + getAverageAccuracy() + "%";
+    function updateHUD() {
+      const qNum = Math.min(currentQIndex + 1, TOTAL_QUESTIONS);
+      document.getElementById("question-badge").innerText = `SOAL: ${qNum}/${TOTAL_QUESTIONS}`;
+      document.getElementById("score-badge").innerText = `SKOR: ${score}`;
+      document.getElementById("acc-display").innerText = `🎯 Akurasi: ${getAverageAccuracy()}%`;
     }
 
     function renderMelodyChips() {
-      var qData = MELODY_QUESTIONS[currentQIndex];
-      var container = document.getElementById("melody-sequence");
+      const qData = MELODY_QUESTIONS[currentQIndex];
+      const container = document.getElementById("melody-sequence");
       container.innerHTML = "";
 
-      for (var i = 0; i < qData.notes.length; i++) {
-        var item = qData.notes[i];
-        var chip = document.createElement("div");
+      qData.notes.forEach((item, idx) => {
+        const chip = document.createElement("div");
         chip.className = "note-chip";
-        chip.id = "note-chip-" + i;
+        chip.id = "note-chip-" + idx;
 
-        if (i < currentNoteStep) {
+        if (idx < currentNoteStep) {
           chip.classList.add("done");
-        } else if (i === currentNoteStep) {
+        } else if (idx === currentNoteStep) {
           chip.classList.add("active");
         }
 
-        chip.innerHTML = '<span class="n-name">' + item.note + '</span><span class="n-beat">' + formatBeatLabel(item.beats) + '</span>';
+        chip.innerHTML = `<span class="n-name text-sm font-black text-slate-200 block">${item.note}</span>
+                          <span class="n-beat text-[10px] font-bold text-[#8a81a8] block">${formatBeatLabel(item.beats)}</span>`;
         container.appendChild(chip);
-      }
+      });
 
-      var activeItem = qData.notes[currentNoteStep];
-      var freq = NOTE_FREQS[activeItem.note];
-      document.getElementById("target-freq").innerText = "Target Aktif: " + activeItem.note + " (" + freq.toFixed(1) + " Hz) - " + formatBeatLabel(activeItem.beats);
-      document.getElementById("hold-instruction").innerText = "NYANYIKAN & TAHAN: " + activeItem.note + " (" + formatBeatLabel(activeItem.beats) + ")";
+      const activeItem = qData.notes[currentNoteStep];
+      const freq = NOTE_FREQS[activeItem.note];
+      document.getElementById("target-freq").innerText =
+        `Target Aktif: ${activeItem.note} (${freq.toFixed(1)} Hz) • ${formatBeatLabel(activeItem.beats)}`;
+      document.getElementById("hold-instruction").innerText =
+        `🎯 NYANYIKAN & TAHAN: ${activeItem.note} (${formatBeatLabel(activeItem.beats)})`;
     }
 
     function startQuestionTimer() {
       clearInterval(timerInterval);
       questionTimeLeft = TIME_LIMIT_PER_Q;
-      document.getElementById("timer-display").innerText = "Waktu: " + questionTimeLeft.toFixed(1) + "s";
+      document.getElementById("timer-display").innerText = `⏱️ Waktu: ${questionTimeLeft.toFixed(1)}s`;
 
-      timerInterval = setInterval(function() {
+      timerInterval = setInterval(() => {
         if (isExamFinished) return;
         questionTimeLeft -= 0.1;
         if (questionTimeLeft <= 0) {
           questionTimeLeft = 0;
-          document.getElementById("timer-display").innerText = "Waktu Habis!";
-          var qData = MELODY_QUESTIONS[currentQIndex];
-          var ratio = currentNoteStep / qData.notes.length;
+          document.getElementById("timer-display").innerText = "⏱️ Waktu Habis!";
+          const qData = MELODY_QUESTIONS[currentQIndex];
+          const ratio = currentNoteStep / qData.notes.length;
           completeCurrentQuestion(Math.round(ratio * 8), Math.round(ratio * 80));
         } else {
-          document.getElementById("timer-display").innerText = "Waktu: " + questionTimeLeft.toFixed(1) + "s";
+          document.getElementById("timer-display").innerText = `⏱️ Waktu: ${questionTimeLeft.toFixed(1)}s`;
         }
       }, 100);
     }
 
-    function skipQuestion() {
-      if (isExamFinished) return;
-      completeCurrentQuestion(0, 0);
-    }
-
     function completeCurrentQuestion(earnedPoints, earnedAccuracy) {
       clearInterval(timerInterval);
+      previewRunId++; // Hentikan preview melodi soal sebelumnya jika masih berjalan
+      isPlayingPreview = false;
+
       score += earnedPoints;
       questionAccuracies.push(earnedAccuracy);
       currentQIndex++;
-      updateRankAndScoreUI();
+      updateHUD();
       sendToSpreadsheet(false);
 
       if (currentQIndex >= TOTAL_QUESTIONS) {
@@ -515,42 +515,9 @@
     }
 
     function loadQuestion(idx) {
-      var qData = MELODY_QUESTIONS[idx];
+      const qData = MELODY_QUESTIONS[idx];
       currentNoteStep = 0;
       holdProgress = 0;
       holdCentsSamples = [];
 
-      document.getElementById("melody-desc").innerText = qData.title;
-      document.getElementById("progress-fill").style.width = "0%";
-      updateRankAndScoreUI();
-      renderMelodyChips();
-      startQuestionTimer();
-      playMelodySequence();
-    }
-
-    function sendToSpreadsheet(sendEmailNow) {
-      var payload = {
-        nama: studentName,
-        kelas: studentClass,
-        email: studentEmail,
-        wa: studentWA,
-        skor: score,
-        akurasi: getAverageAccuracy(),
-        rank: calculateRank(score),
-        kirimEmail: sendEmailNow
-      };
-
-      fetch(SCRIPT_URL, {
-        method: "POST",
-        mode: "no-cors",
-        body: JSON.stringify(payload)
-      }).catch(function(err) {});
-    }
-
-    function finishExam() {
-      isExamFinished = true;
-      clearInterval(timerInterval);
-      if (isListening) stopMic();
-
-      var avgAcc = getAverageAccuracy();
-  
+      docu
